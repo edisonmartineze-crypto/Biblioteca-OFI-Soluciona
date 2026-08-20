@@ -3,83 +3,432 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#5a351d">
-<title>Biblioteca OFI Soluciona V7</title>
+<meta name="theme-color" content="#5b351c">
+<title>Biblioteca OFI Soluciona</title>
 <style>
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif}
-body{background:#70431f;color:#2b1b11}[hidden]{display:none!important}button{font:inherit}
-.library{min-height:100vh;padding:16px clamp(8px,3vw,38px) 42px;background:linear-gradient(#32190b12,#32190b24),url("assets/estanteria.svg") center top/cover fixed}
-.head{width:min(1220px,97vw);margin:0 auto 18px;padding:14px 17px;display:flex;align-items:center;justify-content:space-between;gap:14px;background:#fff7e9eb;border:1px solid #60391d35;border-radius:16px;box-shadow:0 10px 28px #2b16082d}
-.head h1{margin:0;font-size:clamp(22px,3.8vw,43px)}.head p{margin:4px 0 0;opacity:.65}
-.refresh{border:0;border-radius:10px;background:#4c2c17;color:#fff;padding:10px 13px;cursor:pointer}
-.grid{width:min(1260px,98vw);margin:auto;padding:34px 6px 28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:40px 28px;align-items:end}
-.card{border:0;background:transparent;cursor:pointer;padding:0;color:inherit;display:flex;flex-direction:column;align-items:center}
-.book{position:relative;width:min(225px,84%);aspect-ratio:.705;filter:drop-shadow(10px 16px 10px #29140770);transition:.18s}.card:hover .book{transform:translateY(-8px)}
-.cover{position:absolute;left:9px;right:0;top:0;bottom:0;background:#eee;border-radius:3px 7px 7px 3px;overflow:hidden;box-shadow:inset 7px 0 8px #0003}.cover img{width:100%;height:100%;display:block;object-fit:cover;background:#fff}
-.spine{position:absolute;left:0;top:5px;bottom:4px;width:11px;border-radius:3px 0 0 3px;background:linear-gradient(90deg,#3a2213,#84502b,#b97e48)}
-.pages{position:absolute;right:-5px;top:7px;bottom:7px;width:7px;background:repeating-linear-gradient(0deg,#fffaf0 0 2px,#d7cbb9 2px 3px);transform:skewY(-5deg)}
-.label{margin-top:12px;max-width:100%;padding:7px 10px;border-radius:9px;background:#fff7e9ed;text-align:center;box-shadow:0 5px 15px #2a150927}.title{display:block;font-weight:800;font-size:14px;line-height:1.2}.meta{display:block;font-size:11px;margin-top:3px;opacity:.62}.status{grid-column:1/-1;text-align:center;padding:45px;color:#fff;font-weight:700}
-.viewer{position:fixed;inset:0;z-index:100;background:#34363a;display:flex;flex-direction:column}
-.toolbar{height:54px;flex:0 0 54px;background:#1c1d20f3;color:#fff;display:flex;align-items:center;gap:8px;padding:7px 9px;border-bottom:1px solid #ffffff16}
-.icon{width:40px;height:40px;border:0;border-radius:9px;background:#ffffff10;color:#fff;font-size:20px;cursor:pointer}.vtitle{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:700}.ver{font-size:10px;opacity:.45}
-.stage{position:relative;flex:1;min-height:0;display:grid;place-items:center;overflow:hidden;padding:8px}
-#bookHost{width:100%;height:100%;display:grid;place-items:center}
-.loading{position:absolute;inset:0;z-index:50;background:#34363a;color:#fff;display:grid;place-items:center;text-align:center}.loading.off{display:none}.spin{width:42px;height:42px;margin:0 auto 12px;border:4px solid #ffffff24;border-top-color:#fff;border-radius:50%;animation:s .8s linear infinite}@keyframes s{to{transform:rotate(360deg)}}
-@media(max-width:760px){.library{background-attachment:scroll;padding:9px 7px 28px}.head{padding:11px 12px}.head h1{font-size:21px}.head p{display:none}.grid{grid-template-columns:repeat(2,minmax(0,1fr));padding:24px 2px;gap:28px 8px}.book{width:min(160px,90%)}.title{font-size:12px}.stage{padding:2px}}
+:root{
+  --ink:#2f2117; --cream:#f7efe4; --paper:#fff;
+  --viewer:#36383d; --bar:rgba(25,26,29,.92); --muted:#d5d6d9;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Inter,Arial,Helvetica,sans-serif;background:#6f431f;color:var(--ink)}
+button,input{font:inherit}
+button{touch-action:manipulation}
+[hidden]{display:none!important}
+
+/* LIBRARY */
+.library{
+  min-height:100vh;
+  background:
+    linear-gradient(rgba(40,22,10,.08),rgba(40,22,10,.16)),
+    url("assets/estanteria.svg") center top/cover fixed;
+  padding:20px clamp(12px,3vw,42px) 44px;
+}
+.library-head{
+  width:min(1200px,96vw); margin:0 auto 16px; padding:16px 18px;
+  display:flex; align-items:end; justify-content:space-between; gap:18px;
+  background:rgba(255,247,235,.88); border:1px solid rgba(92,52,24,.22);
+  border-radius:16px; box-shadow:0 10px 28px #43230835;
+  backdrop-filter:blur(8px);
+}
+.library-head h1{font-size:clamp(24px,4vw,44px);margin:0;letter-spacing:.02em}
+.library-head p{margin:5px 0 0;font-size:clamp(13px,1.4vw,16px);opacity:.72}
+.refresh{
+  border:0;border-radius:12px;padding:11px 14px;background:#4f2d17;color:#fff;cursor:pointer;
+}
+.shelves{
+  width:min(1260px,98vw); margin:auto;
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:clamp(26px,4vw,54px) clamp(24px,4vw,48px);
+  align-items:end; padding:44px clamp(12px,2vw,24px) 36px;
+}
+.book-card{
+  border:0;background:transparent;color:inherit;cursor:pointer;padding:0;
+  display:flex;flex-direction:column;align-items:center;min-width:0;
+}
+.book-physical{
+  width:min(230px,82%); aspect-ratio:0.705;
+  position:relative; transform-origin:50% 100%;
+  transition:transform .18s ease,filter .18s ease;
+  filter:drop-shadow(10px 16px 10px rgba(37,18,7,.42));
+  perspective:900px;
+}
+.book-card:hover .book-physical,.book-card:focus-visible .book-physical{transform:translateY(-10px) rotateY(-3deg)}
+.book-cover{
+  position:absolute; inset:0 0 0 9px; background:#eee; overflow:hidden;
+  border-radius:3px 7px 7px 3px;
+  box-shadow:inset 7px 0 9px rgba(0,0,0,.19),inset -2px 0 2px rgba(255,255,255,.5);
+}
+.book-cover canvas{width:100%;height:100%;display:block;object-fit:cover;background:#fff}
+.book-spine{
+  position:absolute;left:0;top:5px;bottom:4px;width:11px;border-radius:3px 0 0 3px;
+  background:linear-gradient(90deg,#3b2314,#7e4b27 55%,#b77a43);
+  transform:skewY(-2deg);
+}
+.book-pages{
+  position:absolute;right:-5px;top:6px;bottom:6px;width:7px;
+  background:repeating-linear-gradient(0deg,#fff8e9 0 2px,#dacdb8 2px 3px);
+  transform:skewY(-6deg);border-radius:0 3px 3px 0;
+}
+.book-label{
+  margin-top:14px;padding:8px 12px;border-radius:10px;max-width:100%;
+  background:rgba(255,247,235,.9);box-shadow:0 5px 14px #41230d28;
+}
+.book-title{display:block;font-weight:800;font-size:15px;line-height:1.2;overflow-wrap:anywhere}
+.book-pages-count{display:block;margin-top:3px;font-size:12px;opacity:.64}
+.empty{
+  grid-column:1/-1;text-align:center;padding:50px 20px;background:#fff7;border-radius:18px;
+  color:#fff;text-shadow:0 2px 4px #0008
+}
+
+/* VIEWER */
+.viewer{position:fixed;inset:0;background:var(--viewer);z-index:30;display:flex;flex-direction:column}
+.toolbar{
+  height:58px;padding:7px 10px;display:flex;align-items:center;gap:7px;
+  background:var(--bar);color:#fff;border-bottom:1px solid #ffffff18;z-index:50;
+}
+.viewer-title{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:700;padding:0 7px}
+.iconbtn{
+  width:42px;height:42px;border:0;border-radius:10px;background:#ffffff10;color:#fff;cursor:pointer;
+  display:grid;place-items:center;font-size:20px
+}
+.iconbtn:hover{background:#ffffff22}
+.stage{position:relative;flex:1;min-height:0;overflow:hidden;display:grid;place-items:center;padding:12px 58px}
+.flipbook{filter:drop-shadow(0 18px 28px #0009)}
+.page{background:#fff;overflow:hidden;position:relative}
+.page canvas{display:block;width:100%;height:100%;object-fit:contain;background:#fff}
+.page .page-wait{position:absolute;inset:0;display:grid;place-items:center;color:#aaa;font-size:12px}
+.navside{
+  position:absolute;top:50%;transform:translateY(-50%);z-index:45;width:48px;height:74px;border:0;
+  border-radius:14px;background:#17181cb8;color:#fff;font-size:38px;cursor:pointer
+}
+.navside.prev{left:8px}.navside.next{right:8px}
+.bottom{
+  min-height:56px;background:var(--bar);border-top:1px solid #ffffff18;color:#fff;
+  display:flex;align-items:center;justify-content:center;gap:10px;padding:7px 12px;z-index:50
+}
+.counter{min-width:92px;text-align:center;font-variant-numeric:tabular-nums}
+.range{width:min(420px,40vw)}
+.loading{position:absolute;inset:0;z-index:60;background:#303237;display:grid;place-items:center;color:#fff}
+.loading.hide{display:none}
+.loading-box{text-align:center;padding:22px}
+.spinner{width:44px;height:44px;border:4px solid #ffffff24;border-top-color:#fff;border-radius:50%;animation:spin .9s linear infinite;margin:0 auto 14px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.notice{font-size:12px;opacity:.7;max-width:640px;margin:8px auto 0;line-height:1.35}
+
+@media(max-width:760px){
+  .library{background-attachment:scroll;padding:12px 10px 30px}
+  .library-head{align-items:center;padding:12px 14px}
+  .library-head p{display:none}
+  .refresh{padding:9px 11px}
+  .shelves{grid-template-columns:repeat(2,minmax(0,1fr));gap:30px 10px;padding:28px 4px}
+  .book-physical{width:min(165px,88%)}
+  .book-label{padding:7px 8px;margin-top:10px}
+  .book-title{font-size:13px}.book-pages-count{font-size:11px}
+  .toolbar{height:54px}.iconbtn{width:39px;height:39px}
+  .stage{padding:7px 2px 7px}
+  .navside{width:38px;height:58px;font-size:30px;background:#17181c88}
+  .navside.prev{left:1px}.navside.next{right:1px}
+  .range{display:none}.desktop-only{display:none}
+  .viewer-title{font-size:13px}
+}
+@media(max-width:420px){
+  .library-head h1{font-size:21px}
+  .shelves{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .book-physical{width:min(150px,90%)}
+}
 </style>
 </head>
 <body>
-<main class="library">
-<header class="head"><div><h1>BIBLIOTECA OFI SOLUCIONA</h1><p>Publicaciones para lectura en línea</p></div><button class="refresh" id="refresh">↻ Actualizar</button></header>
-<section class="grid" id="grid"><div class="status">Cargando biblioteca…</div></section>
+<main class="library" id="library">
+  <header class="library-head">
+    <div>
+      <h1>BIBLIOTECA OFI SOLUCIONA</h1>
+      <p>Publicaciones disponibles para lectura en línea.</p>
+    </div>
+    <button class="refresh" id="refreshBooks" title="Actualizar publicaciones">↻ Actualizar</button>
+  </header>
+  <section class="shelves" id="shelves">
+    <div class="empty">Buscando publicaciones…</div>
+  </section>
 </main>
+
 <section class="viewer" id="viewer" hidden>
-<div class="toolbar"><button class="icon" id="back">←</button><div class="vtitle" id="vtitle"></div><span class="ver">V7</span><button class="icon" id="full">⛶</button></div>
-<div class="stage" id="stage"><div id="bookHost"></div><div class="loading" id="loading"><div><div class="spin"></div><div id="loadText">Preparando libro…</div><div id="prog" style="font-size:12px;opacity:.65;margin-top:8px"></div></div></div></div>
+  <div class="toolbar">
+    <button class="iconbtn" id="back" title="Volver a la biblioteca">←</button>
+    <div class="viewer-title" id="viewerTitle"></div>
+    <button class="iconbtn desktop-only" id="zoomOut" title="Alejar">−</button>
+    <button class="iconbtn desktop-only" id="zoomIn" title="Acercar">＋</button>
+    <button class="iconbtn" id="full" title="Pantalla completa">⛶</button>
+  </div>
+  <div class="stage" id="stage">
+    <button class="navside prev" id="prev" aria-label="Página anterior">‹</button>
+    <div class="loading" id="loading">
+      <div class="loading-box"><div class="spinner"></div><div id="loadText">Preparando libro…</div>
+      <div class="notice">La primera apertura puede tardar unos segundos según el tamaño del PDF y la conexión.</div></div>
+    </div>
+    <div class="flipbook" id="flipbook"></div>
+    <button class="navside next" id="next" aria-label="Página siguiente">›</button>
+  </div>
+  <div class="bottom">
+    <button class="iconbtn" id="bottomPrev">‹</button>
+    <span class="counter" id="counter">1 / 1</span>
+    <input class="range" id="pageRange" type="range" min="1" max="1" value="1">
+    <button class="iconbtn" id="bottomNext">›</button>
+  </div>
 </section>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.min.js"></script>
+<script src="https://unpkg.com/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
 <script>
 pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-const OWNER='edisonmartineze-crypto',REPO='Biblioteca-OFI-Soluciona',DIR='libros',$=s=>document.querySelector(s);
-let books=[],pdfDoc=null,pageFlip=null,urls=[],session=0,currentPage=0;
-const clean=n=>decodeURIComponent(n).replace(/\.pdf$/i,'').replace(/[-_]+/g,' ').replace(/\s+/g,' ').trim();
-async function catalog(){try{const r=await fetch('catalogo.json',{cache:'no-store'});return r.ok?await r.json():[]}catch(e){return[]}}
-async function gh(){try{const r=await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${DIR}?ref=main`,{cache:'no-store'});if(!r.ok)return[];const a=await r.json();return a.filter(x=>x.type==='file'&&/\.pdf$/i.test(x.name)).map(x=>({file:x.name,title:clean(x.name),pdf:`${DIR}/${encodeURIComponent(x.name)}`,cover:`portadas/${encodeURIComponent(x.name.replace(/\.pdf$/i,'.webp'))}`}))}catch(e){return[]}}
-async function discover(){let a=await catalog(),b=await gh();if(b.length){const m=new Map(a.map(x=>[x.file,x]));b.forEach(x=>m.set(x.file,{...(m.get(x.file)||{}),...x}));a=[...m.values()]}books=a.sort((x,y)=>x.title.localeCompare(y.title,'es'));render()}
-function render(){const g=$('#grid');g.innerHTML='';if(!books.length){g.innerHTML='<div class="status">No se encontraron publicaciones.</div>';return}books.forEach(b=>{const c=document.createElement('button');c.className='card';c.innerHTML=`<div class="book"><div class="spine"></div><div class="cover"><img loading="lazy"></div><div class="pages"></div></div><div class="label"><span class="title"></span><span class="meta"></span></div>`;c.querySelector('.title').textContent=b.title;c.querySelector('.meta').textContent=b.pages?b.pages+' páginas':'PDF';const im=c.querySelector('img');im.src=b.cover||'';im.onerror=()=>im.style.display='none';c.onclick=()=>openBook(b);g.appendChild(c)})}
-async function pageURL(doc,i,token){const p=await doc.getPage(i+1);if(token!==session)return null;const v0=p.getViewport({scale:1}),target=Math.min(1500,Math.max(1050,innerHeight*1.35)),v=p.getViewport({scale:target/v0.height}),cv=document.createElement('canvas');cv.width=Math.ceil(v.width);cv.height=Math.ceil(v.height);await p.render({canvasContext:cv.getContext('2d',{alpha:false}),viewport:v}).promise;if(token!==session)return null;const blob=await new Promise(r=>cv.toBlob(r,'image/webp',.82));if(!blob)return null;const u=URL.createObjectURL(blob);urls.push(u);return u}
-async function destroyBook(){session++;if(pageFlip){try{pageFlip.destroy()}catch(e){}pageFlip=null}const d=pdfDoc;pdfDoc=null;if(d)try{await d.destroy()}catch(e){}urls.forEach(URL.revokeObjectURL);urls=[];$('#bookHost').innerHTML=''}
-async function openBook(b){
- await destroyBook();const token=session;currentPage=0;$('#viewer').hidden=false;document.body.style.overflow='hidden';$('#vtitle').textContent=b.title;$('#loading').classList.remove('off');$('#loadText').textContent='Preparando páginas…';$('#prog').textContent='';
- try{
-  const doc=await pdfjsLib.getDocument({url:b.pdf,disableRange:false,disableStream:false,disableAutoFetch:false}).promise;if(token!==session){doc.destroy();return}pdfDoc=doc;
-  const p1=await doc.getPage(1),v=p1.getViewport({scale:1}),ratio=v.width/v.height;
-  // StPageFlip loadFromImages needs image URLs. We render all pages once, then fullscreen/orientation never touches PDF.js.
-  const arr=new Array(doc.numPages);let done=0,next=0,workers=Math.min(4,doc.numPages);
-  async function worker(){while(next<doc.numPages){const i=next++;arr[i]=await pageURL(doc,i,token);done++;if(token!==session)return;$('#prog').textContent=done+' / '+doc.numPages}}
-  await Promise.all(Array.from({length:workers},worker));if(token!==session)return;
-  const st=$('#stage').getBoundingClientRect(),mobile=matchMedia('(max-width:760px)').matches;
-  let h=Math.min(st.height-18, mobile?st.height-10:(st.width/2)/ratio),w=h*ratio;
-  pageFlip=new St.PageFlip($('#bookHost'),{
-   width:Math.max(220,Math.round(w)),height:Math.max(300,Math.round(h)),
-   size:'stretch',minWidth:180,maxWidth:1600,minHeight:250,maxHeight:1900,
-   showCover:true,usePortrait:mobile,autoSize:true,
-   drawShadow:true,maxShadowOpacity:.55,flippingTime:700,
-   mobileScrollSupport:false,swipingDistance:12,clickEventForward:true
-  });
-  pageFlip.loadFromImages(arr);
-  pageFlip.on('flip',e=>{currentPage=e.data});
-  $('#loading').classList.add('off');
- }catch(e){console.error(e);$('#loadText').textContent='No se pudo abrir este PDF.';$('#prog').textContent=''}
+
+const REPO_OWNER='edisonmartineze-crypto';
+const REPO_NAME='Biblioteca-OFI-Soluciona';
+const BOOK_DIR='libros';
+
+const $=s=>document.querySelector(s);
+let books=[], pdfDoc=null, pageFlip=null, currentBook=null, zoom=1;
+let pageCanvases=[], rendered=new Set(), rendering=new Map();
+const titleCaseName = filename => decodeURIComponent(filename)
+  .replace(/\.pdf$/i,'').replace(/[-_]+/g,' ').replace(/\s+/g,' ').trim();
+
+function encodePath(path){return path.split('/').map(encodeURIComponent).join('/')}
+
+async function discoverLocalDirectory(){
+  try{
+    const r=await fetch(BOOK_DIR+'/',{cache:'no-store'});
+    if(!r.ok) return [];
+    const type=r.headers.get('content-type')||'';
+    if(!type.includes('text/html')) return [];
+    const html=await r.text();
+    const doc=new DOMParser().parseFromString(html,'text/html');
+    const names=[...doc.querySelectorAll('a')].map(a=>a.getAttribute('href')||'')
+      .filter(h=>/\.pdf(?:$|\?)/i.test(h))
+      .map(h=>decodeURIComponent(h.split('?')[0].split('/').pop()));
+    return [...new Set(names)].map(name=>({name,title:titleCaseName(name),pdf:`${BOOK_DIR}/${encodeURIComponent(name)}`}));
+  }catch(e){return []}
 }
-async function closeBook(){await destroyBook();$('#viewer').hidden=true;document.body.style.overflow=''}
-$('#back').onclick=closeBook;$('#refresh').onclick=discover;
-$('#full').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await $('#viewer').requestFullscreen()}catch(e){}};
-// IMPORTANT: resize/fullscreen does not rebuild, destroy or rerender pages.
-document.addEventListener('fullscreenchange',()=>{if(pageFlip)setTimeout(()=>{try{pageFlip.updateFromImages(urls);pageFlip.flip(currentPage,'top')}catch(e){}},80)});
-addEventListener('resize',()=>{}, {passive:true});
+
+async function discoverGitHub(){
+  try{
+    const api=`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${BOOK_DIR}?ref=main`;
+    const r=await fetch(api,{headers:{Accept:'application/vnd.github+json'},cache:'no-store'});
+    if(!r.ok) return [];
+    const data=await r.json();
+    if(!Array.isArray(data)) return [];
+    return data.filter(x=>x.type==='file'&&/\.pdf$/i.test(x.name))
+      .map(x=>({name:x.name,title:titleCaseName(x.name),pdf:`${BOOK_DIR}/${encodeURIComponent(x.name)}`}));
+  }catch(e){return []}
+}
+
+async function discoverFallback(){
+  const defaults=[
+    'Cenizas de Memoria.pdf',
+    'Colección Total.pdf',
+    'Personajes - Fotografía.pdf'
+  ];
+  const ok=[];
+  for(const name of defaults){
+    try{
+      const path=`${BOOK_DIR}/${encodeURIComponent(name)}`;
+      const r=await fetch(path,{method:'HEAD',cache:'no-store'});
+      if(r.ok) ok.push({name,title:titleCaseName(name),pdf:path});
+    }catch(e){}
+  }
+  return ok;
+}
+
+async function discoverBooks(){
+  $('#shelves').innerHTML='<div class="empty">Buscando publicaciones…</div>';
+  let found=await discoverLocalDirectory();
+  if(!found.length) found=await discoverGitHub();
+  if(!found.length) found=await discoverFallback();
+  books=found.sort((a,b)=>a.title.localeCompare(b.title,'es',{sensitivity:'base'}));
+  renderLibrary();
+}
+
+async function renderCover(book, holder, info){
+  try{
+    const doc=await pdfjsLib.getDocument({url:book.pdf,disableAutoFetch:true}).promise;
+    info.textContent=`${doc.numPages} páginas`;
+    book.pages=doc.numPages;
+    const p=await doc.getPage(1);
+    const base=p.getViewport({scale:1});
+    const scale=Math.min(1.3,420/base.width);
+    const vp=p.getViewport({scale});
+    const c=document.createElement('canvas');
+    c.width=Math.ceil(vp.width);c.height=Math.ceil(vp.height);
+    await p.render({canvasContext:c.getContext('2d',{alpha:false}),viewport:vp}).promise;
+    holder.appendChild(c);
+    await doc.destroy();
+  }catch(e){
+    holder.innerHTML='<div style="height:100%;display:grid;place-items:center;padding:18px;text-align:center;background:#efe7db;color:#5b3c24;font-weight:800">PUBLICACIÓN</div>';
+    info.textContent='PDF';
+  }
+}
+
+function renderLibrary(){
+  const host=$('#shelves');host.innerHTML='';
+  if(!books.length){host.innerHTML='<div class="empty">No se encontraron PDF en la carpeta “libros”.</div>';return}
+  for(const b of books){
+    const btn=document.createElement('button');
+    btn.className='book-card';
+    btn.innerHTML=`<div class="book-physical"><div class="book-spine"></div><div class="book-cover"></div><div class="book-pages"></div></div>
+      <div class="book-label"><span class="book-title"></span><span class="book-pages-count">Leyendo datos…</span></div>`;
+    btn.querySelector('.book-title').textContent=b.title;
+    btn.onclick=()=>openBook(b);
+    host.appendChild(btn);
+    renderCover(b,btn.querySelector('.book-cover'),btn.querySelector('.book-pages-count'));
+  }
+}
+
+async function openBook(book){
+  currentBook=book; zoom=1; rendered.clear(); rendering.clear(); pageCanvases=[];
+  $('#viewer').hidden=false; document.body.style.overflow='hidden';
+  $('#viewerTitle').textContent=book.title;
+  $('#loading').classList.remove('hide'); $('#loadText').textContent='Abriendo publicación…';
+  try{
+    pdfDoc=await pdfjsLib.getDocument(book.pdf).promise;
+    await buildFlipbook(0);
+  }catch(e){
+    console.error(e);
+    $('#loadText').textContent='No se pudo abrir este PDF.';
+  }
+}
+
+async function computePageGeometry(){
+  const p=await pdfDoc.getPage(1);
+  const base=p.getViewport({scale:1});
+  const ratio=base.width/base.height;
+  const mobile=matchMedia('(max-width:760px)').matches;
+  const st=$('#stage').getBoundingClientRect();
+  let maxW=mobile?st.width-8:(st.width-120)/2;
+  let maxH=st.height-20;
+  let h=Math.min(maxH,maxW/ratio);
+  let w=h*ratio;
+  if(w<180){w=180;h=w/ratio}
+  return {w,h,ratio,mobile};
+}
+
+async function buildFlipbook(startIndex=0){
+  const geo=await computePageGeometry();
+  const host=$('#flipbook'); host.innerHTML=''; pageCanvases=[]; rendered.clear(); rendering.clear();
+
+  for(let i=1;i<=pdfDoc.numPages;i++){
+    const page=document.createElement('div');page.className='page';page.dataset.index=i-1;
+    page.dataset.density=(i===1||i===pdfDoc.numPages)?'hard':'soft';
+    const wait=document.createElement('div');wait.className='page-wait';wait.textContent='…';
+    const canvas=document.createElement('canvas');canvas.width=2;canvas.height=2;
+    page.append(wait,canvas); host.appendChild(page); pageCanvases.push({canvas,wait});
+  }
+
+  if(pageFlip) try{pageFlip.destroy()}catch(e){}
+  pageFlip=new St.PageFlip(host,{
+    width:geo.w,height:geo.h,size:'fixed',
+    minWidth:180,maxWidth:1600,minHeight:240,maxHeight:1900,
+    showCover:true,usePortrait:geo.mobile,autoSize:true,
+    maxShadowOpacity:.5,mobileScrollSupport:false,swipingDistance:18,
+    useMouseEvents:true,clickEventForward:true,drawShadow:true,flippingTime:620
+  });
+  pageFlip.loadFromHTML(host.querySelectorAll('.page'));
+  pageFlip.on('flip',e=>{
+    updateCounter(e.data+1);
+    renderNear(e.data);
+  });
+
+  $('#pageRange').max=pdfDoc.numPages;
+  pageFlip.flip(Math.min(startIndex,pdfDoc.numPages-1), 'top');
+  updateCounter(startIndex+1);
+  await renderNear(startIndex,true);
+  $('#loading').classList.add('hide');
+}
+
+async function renderPage(index){
+  if(index<0||index>=pdfDoc.numPages||rendered.has(index)) return;
+  if(rendering.has(index)) return rendering.get(index);
+  const task=(async()=>{
+    const p=await pdfDoc.getPage(index+1);
+    const slot=pageCanvases[index];
+    if(!slot) return;
+    const rect=slot.canvas.parentElement.getBoundingClientRect();
+    const base=p.getViewport({scale:1});
+    const cssH=Math.max(260,rect.height||600);
+    const dpr=Math.min(2,window.devicePixelRatio||1);
+    const scale=(cssH/base.height)*dpr*zoom;
+    const vp=p.getViewport({scale});
+    slot.canvas.width=Math.max(2,Math.ceil(vp.width));
+    slot.canvas.height=Math.max(2,Math.ceil(vp.height));
+    await p.render({canvasContext:slot.canvas.getContext('2d',{alpha:false}),viewport:vp}).promise;
+    slot.wait.style.display='none';
+    rendered.add(index);
+    rendering.delete(index);
+  })().catch(e=>{console.warn('render page',index+1,e);rendering.delete(index)});
+  rendering.set(index,task);return task;
+}
+
+async function renderNear(index,initial=false){
+  const targets=[];
+  for(let d=-2;d<=4;d++) targets.push(index+d);
+  if(initial) targets.unshift(0,1,2);
+  await Promise.all(targets.map(renderPage));
+}
+
+function updateCounter(n){
+  $('#counter').textContent=`${n} / ${pdfDoc?pdfDoc.numPages:1}`;
+  $('#pageRange').value=n;
+}
+function goPrev(){pageFlip?.flipPrev()}
+function goNext(){pageFlip?.flipNext()}
+$('#prev').onclick=goPrev;$('#bottomPrev').onclick=goPrev;
+$('#next').onclick=goNext;$('#bottomNext').onclick=goNext;
+$('#pageRange').oninput=e=>{const i=+e.target.value-1;pageFlip?.flip(i);renderNear(i)};
+
+async function closeViewer(){
+  if(pageFlip)try{pageFlip.destroy()}catch(e){}
+  pageFlip=null;
+  if(pdfDoc)try{await pdfDoc.destroy()}catch(e){}
+  pdfDoc=null;pageCanvases=[];rendered.clear();rendering.clear();
+  $('#viewer').hidden=true;document.body.style.overflow='';
+}
+$('#back').onclick=closeViewer;
+$('#full').onclick=()=>!document.fullscreenElement?$('#viewer').requestFullscreen?.():document.exitFullscreen?.();
+
+$('#zoomIn').onclick=async()=>{
+  if(!pdfDoc||zoom>=1.5)return;
+  const idx=(pageFlip?.getCurrentPageIndex?.()||0);zoom=Math.min(1.5,zoom+.2);
+  $('#loading').classList.remove('hide');$('#loadText').textContent='Aumentando resolución…';
+  await buildFlipbook(idx);
+};
+$('#zoomOut').onclick=async()=>{
+  if(!pdfDoc||zoom<=.8)return;
+  const idx=(pageFlip?.getCurrentPageIndex?.()||0);zoom=Math.max(.8,zoom-.2);
+  $('#loading').classList.remove('hide');$('#loadText').textContent='Ajustando vista…';
+  await buildFlipbook(idx);
+};
+
+let resizeTimer=null;
+window.addEventListener('resize',()=>{
+  clearTimeout(resizeTimer);
+  resizeTimer=setTimeout(async()=>{
+    if(!pdfDoc||$('#viewer').hidden)return;
+    const idx=pageFlip?.getCurrentPageIndex?.()||0;
+    $('#loading').classList.remove('hide');$('#loadText').textContent='Adaptando al dispositivo…';
+    await buildFlipbook(idx);
+  },280);
+});
+
+document.addEventListener('keydown',e=>{
+  if($('#viewer').hidden)return;
+  if(e.key==='ArrowRight')goNext();
+  if(e.key==='ArrowLeft')goPrev();
+  if(e.key==='Escape'&&!document.fullscreenElement)closeViewer();
+});
 document.addEventListener('contextmenu',e=>{if(!$('#viewer').hidden)e.preventDefault()});
-discover();
+document.addEventListener('dragstart',e=>{if(!$('#viewer').hidden)e.preventDefault()});
+$('#refreshBooks').onclick=discoverBooks;
+
+discoverBooks();
 </script>
-</body></html>
+</body>
+</html>
