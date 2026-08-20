@@ -1,0 +1,23 @@
+[
+  {
+    "file": "Cenizas de Memoria.pdf",
+    "title": "Cenizas de Memoria",
+    "pdf": "libros/Cenizas de Memoria.pdf",
+    "cover": "portadas/Cenizas de Memoria.webp",
+    "pages": 40
+  },
+  {
+    "file": "Colección Total.pdf",
+    "title": "Colección Total",
+    "pdf": "libros/Colección Total.pdf",
+    "cover": "portadas/Colección Total.webp",
+    "pages": 63
+  },
+  {
+    "file": "Personajes - Fotografía.pdf",
+    "title": "Personajes   Fotografía",
+    "pdf": "libros/Personajes - Fotografía.pdf",
+    "cover": "portadas/Personajes - Fotografía.webp",
+    "pages": 131
+  }
+]
